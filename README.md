@@ -1,1 +1,1 @@
-# AudioAnalyze
+AudioRecord + AudioTrack + AudioFormat，通过pcm文件合并并转wav实现录音、暂停、播放、停止、重录、计时等功能
