@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_circle_small" />
+
+        <ImageView
+            android:layout_width="145dp"
+            android:layout_height="145dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_circle_normal" />
+
+        <ImageView
+            android:layout_width="172dp"
+            android:layout_height="172dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_circle_large" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_microphone" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_record_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textColor="#30cecf"
+        android:textSize="36sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/icon_reset" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="重录"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_controller"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="43dp"
+            android:layout_marginRight="43dp"
+            android:gravity="center"
+            android:src="@drawable/icon_stop" />
+
+        <LinearLayout
+            android:id="@+id/ll_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/icon_finish" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="完成"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
