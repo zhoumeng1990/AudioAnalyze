@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
     private val mPermissionList = ArrayList<String>()
 
     private val myHandler = MyHandler(this)
-    private var message: Message? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,9 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
         scheduledThreadPool.scheduleAtFixedRate({
             if (isKeepTime) {
                 ++time
-                message = myHandler.obtainMessage(HANDLER_CODE)
-                message!!.arg1 = time
-                myHandler.sendMessage(message)
+                myHandler.sendEmptyMessage(HANDLER_CODE)
             }
         }, INITIAL_DELAY.toLong(), PERIOD.toLong(), TimeUnit.MILLISECONDS)
 
@@ -243,7 +240,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
 
     fun requestOver(msg: Message) {
         when (msg.what) {
-            HANDLER_CODE -> tvRecordTime!!.text = TimeUtil.formatLongToTimeStr(msg.arg1)
+            HANDLER_CODE -> tvRecordTime!!.text = TimeUtil.formatLongToTimeStr(time)
         }
     }
 

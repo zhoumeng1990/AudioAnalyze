@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static int ACCESS_FINE_ERROR_CODE = 0x0245;
 
     private MyHandler myHandler = new MyHandler(this);
-    private Message message;
     private final static int HANDLER_CODE = 0x0249;
 
     @Override
@@ -111,9 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 if (isKeepTime) {
                     ++time;
-                    message = myHandler.obtainMessage(HANDLER_CODE);
-                    message.arg1 = time;
-                    myHandler.sendMessage(message);
+                    myHandler.sendEmptyMessage(HANDLER_CODE);
                 }
             }
         }, INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
@@ -276,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void requestOver(Message msg){
         switch (msg.what){
             case HANDLER_CODE:
-                tvRecordTime.setText(TimeUtil.formatLongToTimeStr(msg.arg1));
+                tvRecordTime.setText(TimeUtil.formatLongToTimeStr(time));
                 break;
         }
     }
