@@ -67,10 +67,12 @@ public class AudioRecorder {
     //用来回调，转码后的文件绝对路径
     private static IAudioCallback iAudioCallback;
     /**
-     * 此线程池是一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序。
-     * 如果这个线程异常结束，会有另一个取代它，保证顺序执行。
+     * 创建带有缓存的线程池
+     * 当执行第二个任务时第一个任务已经完成，会复用执行第一个任务的线程，而不用每次新建线程。
+     * 如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。
+     * 一开始选择错误，选用newSingleThreadExecutor，导致停止后在录制，出现一堆问题
      */
-    private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+    private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     /**
      * 重置，删除所有的pcm文件
@@ -135,7 +137,7 @@ public class AudioRecorder {
             throw new IllegalStateException("正在录音");
         }
         audioRecord.startRecording();
-        singleThreadExecutor.execute(new Runnable() {
+        cachedThreadPool.execute(new Runnable() {
             @Override
             public void run() {
                 writeDataTOFile();
@@ -208,7 +210,7 @@ public class AudioRecorder {
     public void play(final String filePath) {
         mAudioTrack.play();
 
-        singleThreadExecutor.execute(new Runnable() {
+        cachedThreadPool.execute(new Runnable() {
 
             @Override
             public void run() {
@@ -291,7 +293,7 @@ public class AudioRecorder {
      * @param filePaths pcm文件的绝对路径
      */
     private void pcmFilesToWavFile(final List<String> filePaths) {
-        singleThreadExecutor.execute(new Runnable() {
+        cachedThreadPool.execute(new Runnable() {
             @Override
             public void run() {
                 String filePath = FileUtils.getWavFileAbsolutePath(fileName);

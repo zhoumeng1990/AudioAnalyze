@@ -42,7 +42,7 @@ class AudioRecorder private constructor() {
      * 此线程池是一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序。
      * 如果这个线程异常结束，会有另一个取代它，保证顺序执行。
      */
-    private val singleThreadExecutor = Executors.newSingleThreadExecutor()
+    private val cachedThreadPool = Executors.newCachedThreadPool()
 
     /**
      * 重置，删除所有的pcm文件
@@ -86,7 +86,7 @@ class AudioRecorder private constructor() {
             throw IllegalStateException("正在录音")
         }
         audioRecord!!.startRecording()
-        singleThreadExecutor.execute { writeDataTOFile() }
+        cachedThreadPool.execute { writeDataTOFile() }
     }
 
     /**
@@ -154,7 +154,7 @@ class AudioRecorder private constructor() {
     fun play(filePath: String) {
         mAudioTrack!!.play()
 
-        singleThreadExecutor.execute {
+        cachedThreadPool.execute {
             val file = File(filePath)
             var fis: FileInputStream? = null
             try {
@@ -238,7 +238,7 @@ class AudioRecorder private constructor() {
      * @param filePaths pcm文件的绝对路径
      */
     private fun pcmFilesToWavFile(filePaths: List<String>) {
-        singleThreadExecutor.execute {
+        cachedThreadPool.execute {
             val filePath = FileUtils.getWavFileAbsolutePath(fileName)
             if (PcmToWav.mergePCMFilesToWAVFile(filePaths, filePath)) {
                 //合成后回调

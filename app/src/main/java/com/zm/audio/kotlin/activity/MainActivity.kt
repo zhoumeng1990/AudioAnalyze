@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -17,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.zm.audio.R
 import com.zm.audio.kotlin.Listeners.CustomPhoneStateListener
+import com.zm.audio.kotlin.handler.MyHandler
 import com.zm.audio.kotlin.interfaces.IAudioCallback
 import com.zm.audio.kotlin.interfaces.IPhoneState
 import com.zm.audio.kotlin.utils.AudioRecorder
@@ -50,6 +52,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
 
     // 声明一个集合，在后面的代码中用来存储用户拒绝授权的权
     private val mPermissionList = ArrayList<String>()
+
+    private val myHandler = MyHandler(this)
+    private var message: Message? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +95,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
         scheduledThreadPool.scheduleAtFixedRate({
             if (isKeepTime) {
                 ++time
-                tvRecordTime!!.text = TimeUtil.formatLongToTimeStr(time)
+                message = myHandler.obtainMessage(HANDLER_CODE)
+                message!!.arg1 = time
+                myHandler.sendMessage(message)
             }
         }, INITIAL_DELAY.toLong(), PERIOD.toLong(), TimeUnit.MILLISECONDS)
 
@@ -142,7 +149,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
     private fun registerPhoneStateListener() {
         val customPhoneStateListener = CustomPhoneStateListener(this)
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        telephonyManager?.listen(customPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
+        telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
     }
 
     /**
@@ -234,9 +241,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
         }
     }
 
+    fun requestOver(msg: Message) {
+        when (msg.what) {
+            HANDLER_CODE -> tvRecordTime!!.text = TimeUtil.formatLongToTimeStr(msg.arg1)
+        }
+    }
+
     companion object {
-        private val INITIAL_DELAY = 0
-        private val PERIOD = 1000
-        private val ACCESS_FINE_ERROR_CODE = 0x0245
+        private const val INITIAL_DELAY = 0
+        private const val PERIOD = 1000
+        private const val ACCESS_FINE_ERROR_CODE = 0x0245
+        private const val HANDLER_CODE = 0x0249
     }
 }

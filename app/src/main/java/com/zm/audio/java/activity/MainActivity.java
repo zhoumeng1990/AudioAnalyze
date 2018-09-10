@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.zm.audio.R;
 import com.zm.audio.java.Listeners.CustomPhoneStateListener;
+import com.zm.audio.java.handler.MyHandler;
 import com.zm.audio.java.interfaces.IAudioCallback;
 import com.zm.audio.java.interfaces.IPhoneState;
 import com.zm.audio.java.utils.AudioRecorder;
@@ -61,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 声明一个集合，在后面的代码中用来存储用户拒绝授权的权
     private List<String> mPermissionList = new ArrayList<>();
     private final static int ACCESS_FINE_ERROR_CODE = 0x0245;
+
+    private MyHandler myHandler = new MyHandler(this);
+    private Message message;
+    private final static int HANDLER_CODE = 0x0249;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +111,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 if (isKeepTime) {
                     ++time;
-                    tvRecordTime.setText(TimeUtil.formatLongToTimeStr(time));
+                    message = myHandler.obtainMessage(HANDLER_CODE);
+                    message.arg1 = time;
+                    myHandler.sendMessage(message);
                 }
             }
         }, INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
@@ -262,6 +270,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void phone() {
         if (audioRecorder.getStatus() == AudioStatus.STATUS_START) {
             phoneToPause();
+        }
+    }
+
+    public void requestOver(Message msg){
+        switch (msg.what){
+            case HANDLER_CODE:
+                tvRecordTime.setText(TimeUtil.formatLongToTimeStr(msg.arg1));
+                break;
         }
     }
 }
