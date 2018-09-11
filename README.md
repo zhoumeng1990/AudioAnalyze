@@ -1,6 +1,6 @@
 AudioRecord + AudioTrack + AudioFormat，通过pcm文件合并并转wav实现录音、暂停、播放、停止、重录、计时等功能
 
->微信公众号：**[IT小顽童](#)**
+>微信公众号：**[IT小顽童](#)** 
 最近公司的一个需求，集合了录音、暂停、停止、完成、播放、重录、计时等功能，没找到合适的资源，大部分都不支持暂停，就自己整理并整合了一个，参考官方文档和一些资料后，撸了个库，现在做一些说明和解析。
 
 [官方文档地址](https://developer.android.google.cn/reference/android/media/AudioRecord)：https://developer.android.google.cn/reference/android/media/AudioRecord
@@ -492,4 +492,4 @@ public class WaveHeader {
 ***
 `微信扫我`
 
-![](https://img-blog.csdn.net/20180718002703692?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BhbmdwYW5nMTIzNjU0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![](https://github.com/zhoumeng1990/AudioAnalyze/blob/master/wechat.jpg)
