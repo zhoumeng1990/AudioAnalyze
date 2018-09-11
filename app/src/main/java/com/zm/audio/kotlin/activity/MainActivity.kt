@@ -176,6 +176,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
 
     override fun onDestroy() {
         audioRecorder!!.release()
+        audioRecorder!!.releaseAudioTrack()
         scheduledThreadPool.shutdown()
         super.onDestroy()
     }

@@ -53,7 +53,7 @@ public class AudioRecorder {
      * 播放声音
      * 一些必要的参数，需要和AudioRecord一一对应，否则声音会出错
      */
-    private AudioTrack mAudioTrack;
+    private AudioTrack audioTrack;
 
     //录音状态,默认未开始
     private AudioStatus status = AudioStatus.STATUS_NO_READY;
@@ -122,7 +122,7 @@ public class AudioRecorder {
         AudioFormat audioFormat = new AudioFormat.Builder().setSampleRate(AUDIO_SAMPLE_RATE)
                 .setEncoding(AUDIO_ENCODING).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build();
 
-        mAudioTrack = new AudioTrack(audioAttributes, audioFormat, bufferSizeInBytes,
+        audioTrack = new AudioTrack(audioAttributes, audioFormat, bufferSizeInBytes,
                 AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
     }
 
@@ -208,7 +208,7 @@ public class AudioRecorder {
      * @param filePath 文件的绝对路径
      */
     public void play(final String filePath) {
-        mAudioTrack.play();
+        audioTrack.play();
 
         cachedThreadPool.execute(new Runnable() {
 
@@ -229,7 +229,7 @@ public class AudioRecorder {
                             continue;
                         }
                         if (readCount != 0 && readCount != -1) {
-                            mAudioTrack.write(buffer, 0, readCount);
+                            audioTrack.write(buffer, 0, readCount);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -237,6 +237,20 @@ public class AudioRecorder {
                 }
             }
         });
+    }
+
+    /**
+     * 释放audioTrack
+     */
+    public void releaseAudioTrack(){
+        if (audioTrack == null) {
+            return;
+        }
+        if (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_STOPPED) {
+            audioTrack.stop();
+        }
+        audioTrack.release();
+        audioTrack = null;
     }
 
     /**

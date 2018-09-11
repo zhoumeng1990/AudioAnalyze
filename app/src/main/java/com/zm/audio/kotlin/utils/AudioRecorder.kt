@@ -24,7 +24,7 @@ class AudioRecorder private constructor() {
      * 播放声音
      * 一些必要的参数，需要和AudioRecord一一对应，否则声音会出错
      */
-    private var mAudioTrack: AudioTrack? = null
+    private var audioTrack: AudioTrack? = null
 
     //录音状态,默认未开始
     /**
@@ -71,7 +71,7 @@ class AudioRecorder private constructor() {
         val audioFormat = AudioFormat.Builder().setSampleRate(AUDIO_SAMPLE_RATE)
                 .setEncoding(AUDIO_ENCODING).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build()
 
-        mAudioTrack = AudioTrack(audioAttributes, audioFormat, bufferSizeInBytes,
+        audioTrack = AudioTrack(audioAttributes, audioFormat, bufferSizeInBytes,
                 AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE)
     }
 
@@ -152,7 +152,7 @@ class AudioRecorder private constructor() {
      * @param filePath 文件的绝对路径
      */
     fun play(filePath: String) {
-        mAudioTrack!!.play()
+        audioTrack!!.play()
 
         cachedThreadPool.execute {
             val file = File(filePath)
@@ -171,7 +171,7 @@ class AudioRecorder private constructor() {
                         continue
                     }
                     if (readCount != 0 && readCount != -1) {
-                        mAudioTrack!!.write(buffer, 0, readCount)
+                        audioTrack!!.write(buffer, 0, readCount)
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -179,6 +179,17 @@ class AudioRecorder private constructor() {
 
             }
         }
+    }
+
+    /**
+    * 释放audioTrack
+    */
+    fun releaseAudioTrack(){
+        if (audioTrack?.playState != AudioRecord.RECORDSTATE_STOPPED) {
+            audioTrack?.stop()
+        }
+        audioTrack?.release()
+        audioTrack = null
     }
 
     /**
