@@ -2,6 +2,7 @@ package com.zm.audio.java.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.zm.audio.java.Listeners.CustomPhoneStateListener;
 import com.zm.audio.java.handler.MyHandler;
 import com.zm.audio.java.interfaces.IAudioCallback;
 import com.zm.audio.java.interfaces.IPhoneState;
+import com.zm.audio.java.service.UploadingService;
 import com.zm.audio.java.utils.AudioRecorder;
 import com.zm.audio.java.utils.AudioStatus;
 import com.zm.audio.java.utils.TimeUtil;
@@ -116,15 +118,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }, INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
 
         setPermissions(new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_SETTINGS,
-                Manifest.permission.RECORD_AUDIO},
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.WRITE_SETTINGS,
+                        Manifest.permission.RECORD_AUDIO},
                 ACCESS_FINE_ERROR_CODE);
     }
 
     /**
-     *权限
+     * 权限
      */
     private void setPermissions(String[] permissions, int permissionsCode) {
         mPermissionList.clear();
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 注册并监听电话状态
      */
     private void registerPhoneStateListener() {
-        CustomPhoneStateListener customPhoneStateListener = new CustomPhoneStateListener( this);
+        CustomPhoneStateListener customPhoneStateListener = new CustomPhoneStateListener(this);
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         if (telephonyManager != null) {
             telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -174,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 设置重置和完成是否可以点击
+     *
      * @param clickable true可以点击
      */
     private void setClickable(boolean clickable) {
@@ -255,12 +258,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void showPlay(String filePath) {
-        /*
-         * 合成完后的操作，根据需要去做处理，此处用于测试播放
-         */
         File file = new File(filePath);
         if (file.exists()) {
-            audioRecorder.play(filePath);
+//            //合成完后的操作，根据需要去做处理，此处用于测试播放
+//            audioRecorder.play(filePath);
+            Intent intent = new Intent(this, UploadingService.class);
+            intent.putExtra("test", "test");
+            startService(intent);
         }
     }
 
@@ -271,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void requestOver(Message msg){
-        switch (msg.what){
+    public void requestOver(Message msg) {
+        switch (msg.what) {
             case HANDLER_CODE:
                 tvRecordTime.setText(TimeUtil.formatLongToTimeStr(time));
                 break;

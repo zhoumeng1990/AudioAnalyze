@@ -2,6 +2,7 @@ package com.zm.audio.kotlin.activity
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,7 @@ import com.zm.audio.kotlin.Listeners.CustomPhoneStateListener
 import com.zm.audio.kotlin.handler.MyHandler
 import com.zm.audio.kotlin.interfaces.IAudioCallback
 import com.zm.audio.kotlin.interfaces.IPhoneState
+import com.zm.audio.kotlin.service.UploadingService
 import com.zm.audio.kotlin.utils.AudioRecorder
 import com.zm.audio.kotlin.utils.AudioStatus
 import com.zm.audio.kotlin.utils.TimeUtil
@@ -224,12 +226,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
     }
 
     override fun showPlay(filePath: String) {
-        /*
-         * 合成完后的操作，根据需要去做处理，此处用于测试播放
-         */
         val file = File(filePath)
         if (file.exists()) {
-            audioRecorder!!.play(filePath)
+//            //合成完后的操作，根据需要去做处理，此处用于测试播放
+//            audioRecorder!!.play(filePath)
+            val intent = Intent()
+            intent.setClass(this,UploadingService::class.java)
+            intent.putExtra("test","test")
+            startService(intent)
         }
     }
 

@@ -28,6 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".java.service.UploadingService"/>
+        <service android:name=".kotlin.service.UploadingService"/>
     </application>
 
 </manifest>
