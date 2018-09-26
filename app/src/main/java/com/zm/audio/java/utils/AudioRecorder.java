@@ -36,7 +36,7 @@ public class AudioRecorder {
      */
     private final static int AUDIO_SAMPLE_RATE = 44100;
     // 设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
-    private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO;
+    private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_STEREO;
 
     /**
      * 位深度也叫采样位深，音频的位深度决定动态范围
@@ -120,7 +120,7 @@ public class AudioRecorder {
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();
 
         AudioFormat audioFormat = new AudioFormat.Builder().setSampleRate(AUDIO_SAMPLE_RATE)
-                .setEncoding(AUDIO_ENCODING).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build();
+                .setEncoding(AUDIO_ENCODING).setChannelMask(AudioFormat.CHANNEL_OUT_STEREO).build();
 
         audioTrack = new AudioTrack(audioAttributes, audioFormat, bufferSizeInBytes,
                 AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
