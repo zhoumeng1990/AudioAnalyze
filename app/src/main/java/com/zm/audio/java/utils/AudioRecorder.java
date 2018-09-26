@@ -137,12 +137,7 @@ public class AudioRecorder {
             throw new IllegalStateException("正在录音");
         }
         audioRecord.startRecording();
-        cachedThreadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                writeDataTOFile();
-            }
-        });
+        cachedThreadPool.execute(this::writeDataTOFile);
     }
 
     /**
@@ -210,30 +205,26 @@ public class AudioRecorder {
     public void play(final String filePath) {
         audioTrack.play();
 
-        cachedThreadPool.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                File file = new File(filePath);
-                FileInputStream fis = null;
+        cachedThreadPool.execute(() -> {
+            File file = new File(filePath);
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            byte[] buffer = new byte[bufferSizeInBytes];
+            while (fis != null) {
                 try {
-                    fis = new FileInputStream(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                byte[] buffer = new byte[bufferSizeInBytes];
-                while (fis != null) {
-                    try {
-                        int readCount = fis.read(buffer);
-                        if (readCount == AudioTrack.ERROR_INVALID_OPERATION || readCount == AudioTrack.ERROR_BAD_VALUE) {
-                            continue;
-                        }
-                        if (readCount != 0 && readCount != -1) {
-                            audioTrack.write(buffer, 0, readCount);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    int readCount = fis.read(buffer);
+                    if (readCount == AudioTrack.ERROR_INVALID_OPERATION || readCount == AudioTrack.ERROR_BAD_VALUE) {
+                        continue;
                     }
+                    if (readCount != 0 && readCount != -1) {
+                        audioTrack.write(buffer, 0, readCount);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -307,20 +298,17 @@ public class AudioRecorder {
      * @param filePaths pcm文件的绝对路径
      */
     private void pcmFilesToWavFile(final List<String> filePaths) {
-        cachedThreadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                String filePath = FileUtils.getWavFileAbsolutePath(fileName);
-                if (PcmToWav.mergePCMFilesToWAVFile(filePaths, filePath)) {
-                    //合成后回调
-                    if (iAudioCallback != null) {
-                        iAudioCallback.showPlay(filePath);
-                    }
-                } else {
-                    throw new IllegalStateException("合成失败");
+        cachedThreadPool.execute(() -> {
+            String filePath = FileUtils.getWavFileAbsolutePath(fileName);
+            if (PcmToWav.mergePCMFilesToWAVFile(filePaths, filePath)) {
+                //合成后回调
+                if (iAudioCallback != null) {
+                    iAudioCallback.showPlay(filePath);
                 }
-                fileName = null;
+            } else {
+                throw new IllegalStateException("合成失败");
             }
+            fileName = null;
         });
     }
 

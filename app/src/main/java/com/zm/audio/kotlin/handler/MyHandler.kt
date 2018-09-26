@@ -16,7 +16,7 @@ class MyHandler
 /**
  * 从 MainActivity 中提取出来，原来是因为内部类会隐式强引用当前类，采用弱引用，避免长生命周期导致内存泄漏
  *
- * @param activity
+ * @param activity 宿主类
  */
 (activity: MainActivity) : Handler() {
     private val mActivity: WeakReference<MainActivity> = WeakReference(activity)

@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IAudioCallback, 
         }
     }
 
-    protected fun showToast(toastInfo: String) {
+    private fun showToast(toastInfo: String) {
         Toast.makeText(this, toastInfo, Toast.LENGTH_LONG).show()
     }
 

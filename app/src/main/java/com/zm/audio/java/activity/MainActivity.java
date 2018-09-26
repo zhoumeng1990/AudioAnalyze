@@ -106,14 +106,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initData() {
         setClickable(false);
         audioRecorder = AudioRecorder.getInstance(this);
-        scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
-
-            @Override
-            public void run() {
-                if (isKeepTime) {
-                    ++time;
-                    myHandler.sendEmptyMessage(HANDLER_CODE);
-                }
+        scheduledThreadPool.scheduleAtFixedRate(() -> {
+            if (isKeepTime) {
+                ++time;
+                myHandler.sendEmptyMessage(HANDLER_CODE);
             }
         }, INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
 
