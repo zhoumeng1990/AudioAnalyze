@@ -34,9 +34,9 @@ public class AudioRecorder {
      * 采样率即采样频率，采样频率越高，能表现的频率范围就越大
      * 设置音频采样率，44100是目前的标准，但是某些设备仍然支持22050，16000，11025
      */
-    private final static int AUDIO_SAMPLE_RATE = 44100;
+    private final static int AUDIO_SAMPLE_RATE = 16000;
     // 设置音频的录制的声道CHANNEL_IN_STEREO为双声道，CHANNEL_CONFIGURATION_MONO为单声道
-    private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_STEREO;
+    private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO;
 
     /**
      * 位深度也叫采样位深，音频的位深度决定动态范围
@@ -120,7 +120,7 @@ public class AudioRecorder {
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();
 
         AudioFormat audioFormat = new AudioFormat.Builder().setSampleRate(AUDIO_SAMPLE_RATE)
-                .setEncoding(AUDIO_ENCODING).setChannelMask(AudioFormat.CHANNEL_OUT_STEREO).build();
+                .setEncoding(AUDIO_ENCODING).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build();
 
         audioTrack = new AudioTrack(audioAttributes, audioFormat, bufferSizeInBytes,
                 AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
