@@ -7,9 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Message
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.view.View
@@ -17,6 +14,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.zm.audio.R
 import com.zm.audio.kotlin.Listeners.CustomPhoneStateListener
 import com.zm.audio.kotlin.handler.MyHandler
